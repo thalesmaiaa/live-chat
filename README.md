@@ -9,7 +9,8 @@ live communication features.
 
 - **Real-Time Messaging**: Supports sending and receiving messages in both private (one-on-one) and group chats.
 - **WebSocket Support**: Uses WebSockets for real-time message delivery and interaction between clients and the server.
-- **STOMP Broker Integration**: Utilizes STOMP as a message broker over WebSockets to efficiently route messages between chat participants.
+- **STOMP Broker Integration**: Utilizes STOMP as a message broker over WebSockets to efficiently route messages between
+  chat participants.
 - **Contact Management**: Users can send, receive, and manage contact requests, and view their contact list.
 - **Event-Driven Notifications**: Utilizes Spring’s event system to send notifications for new messages, unread
   messages, and contact requests.
@@ -58,52 +59,25 @@ This project is structured following the **hexagonal (clean) architecture** prin
    cd live-chat
    ```
 
-2. **Configure the application:**
+2. **Configure the application.yml file:**
 
-   - Update `src/main/resources/application.yml` with your PostgreSQL database and security settings. Example
-     configuration:
-     ```yaml
-     spring:
-       datasource:
-         url: jdbc:postgresql://localhost:5432/livechatdb
-         username:
-         password:
-     ```
-
-3. **Build the project:**
-
-   ```bash
-   ./mvnw clean install
+   ```yaml
+   spring:
+     datasource:
+       url: jdbc:postgresql://localhost:5432/livechatdb
+       username:
+       password:
    ```
 
-4. **Run the application:**
+3**Run the application:**
+
    ```bash
-   ./mvnw spring-boot:run
+   mvn spring-boot:run
    ```
 
-### API Usage
+### [API Endpoints](./API.md)
 
-#### Authentication
-
-- Register a user: `POST /users`
-- Login: `POST /oauth/login` (returns JWTs)
-- Refresh: `POST /oauth/refresh` (returns JWTs)
-
-#### Chat Endpoints
-
-- Create group chat: `POST /chats`
-- Create private chat: `POST /chats/{senderId}`
-- Get all user chats: `GET /chats`
-- Get chat by ID: `GET /chats/{chatId}`
-
-#### Contact Endpoints
-
-- Send contact request: `POST /contacts`
-- Accept/Reject request: `PATCH /contacts/{contactId}/{status}`
-- List contacts: `GET /contacts`
-- List pending invites: `GET /contacts/invites`
-
-#### Messaging
+### Messaging
 
 - Messages are sent as part of chat creation or via chat endpoints; notifications are automatically generated and
   delivered via the event system.
