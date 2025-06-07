@@ -1,3 +1,7 @@
+![Java](https://img.shields.io/badge/21-red?style=plastic&logoColor=red&label=java&link=https%3A%2F%2Fwww.oracle.com%2Fjava%2Ftechnologies%2Fjavase%2Fjdk21-archive-downloads.html)
+![Spring Boot](https://img.shields.io/badge/3.4.x-blue?style=plastic&logoColor=red&label=Spring%20Boot&link=https%3A%2F%2Fspring.io%2Fprojects%2Fspring-boot)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-yellow?style=plastic&link=https%3A%2F%2Fwww.postgresql.org%2F)
+
 # Live Chat
 
 A modern, real-time chat backend application designed to support private and group messaging, contact management, and
