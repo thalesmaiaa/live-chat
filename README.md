@@ -69,7 +69,13 @@ This project is structured following the **hexagonal (clean) architecture** prin
        password:
    ```
 
-3**Run the application:**
+3. **Generate your private and public keys inside src/main/resources**
+   ```
+    openssl genrsa > app.key
+    openssl rsa -in app.key -pubout -out app.pub
+   ```
+
+4. **Run the application:**
 
    ```bash
    mvn spring-boot:run

@@ -25,10 +25,3 @@ jwt:
     key: classpath:app.pub
   private:
     key: classpath:app.key
-
-
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
