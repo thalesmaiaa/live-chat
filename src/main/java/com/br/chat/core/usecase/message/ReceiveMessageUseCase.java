@@ -1,12 +1,12 @@
 package com.br.chat.core.usecase.message;
 
+import com.br.chat.adapter.out.events.NotificationEventPublisher;
 import com.br.chat.core.domain.chat.Chat;
 import com.br.chat.core.domain.chat.ChatMessage;
 import com.br.chat.core.domain.chat.ChatType;
 import com.br.chat.core.domain.message.NotificationMessage;
 import com.br.chat.core.domain.message.NotificationType;
 import com.br.chat.core.domain.user.User;
-import com.br.chat.core.events.NotificationEventPublisher;
 import com.br.chat.core.exception.ChatNotFoundException;
 import com.br.chat.core.exception.UserNotFoundException;
 import com.br.chat.core.port.in.message.ReceiveMessagePortIn;
@@ -75,7 +75,7 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
         var notifications = new ArrayList<NotificationMessage>();
         chatMembers.forEach(chatMember -> {
             var notificationMessage = new NotificationMessage();
-            
+
             notificationMessage.setSenderUser(senderUser);
             notificationMessage.setDestinationId(chat.getId());
             notificationMessage.setSentAt(ZonedDateTime.now());

@@ -1,11 +1,11 @@
 package com.br.chat.core.usecase.contact;
 
+import com.br.chat.adapter.out.events.NotificationEventPublisher;
 import com.br.chat.core.domain.contact.Contact;
 import com.br.chat.core.domain.contact.ContactRequestStatus;
 import com.br.chat.core.domain.message.NotificationMessage;
 import com.br.chat.core.domain.message.NotificationType;
 import com.br.chat.core.domain.user.User;
-import com.br.chat.core.events.NotificationEventPublisher;
 import com.br.chat.core.exception.UserNotFoundException;
 import com.br.chat.core.port.in.contact.SendContactRequestPortIn;
 import com.br.chat.core.port.out.ContactRepositoryPortOut;

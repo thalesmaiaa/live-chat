@@ -1,4 +1,4 @@
-package com.br.chat.core.events;
+package com.br.chat.core.domain.events;
 
 import com.br.chat.core.domain.message.NotificationMessage;
 import lombok.Getter;

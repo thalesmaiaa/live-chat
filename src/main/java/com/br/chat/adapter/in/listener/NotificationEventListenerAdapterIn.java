@@ -1,6 +1,6 @@
 package com.br.chat.adapter.in.listener;
 
-import com.br.chat.core.events.NotificationEvent;
+import com.br.chat.core.domain.events.NotificationEvent;
 import com.br.chat.core.port.in.message.NotificationUserPortIn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;

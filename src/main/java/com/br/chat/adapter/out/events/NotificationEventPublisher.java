@@ -1,5 +1,6 @@
-package com.br.chat.core.events;
+package com.br.chat.adapter.out.events;
 
+import com.br.chat.core.domain.events.NotificationEvent;
 import com.br.chat.core.domain.message.NotificationMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

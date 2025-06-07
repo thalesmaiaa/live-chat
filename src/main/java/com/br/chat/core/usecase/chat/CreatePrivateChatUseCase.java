@@ -1,12 +1,12 @@
 package com.br.chat.core.usecase.chat;
 
 import com.br.chat.adapter.in.dto.requests.CreatePrivateChatRequest;
+import com.br.chat.adapter.out.events.NotificationEventPublisher;
 import com.br.chat.core.domain.chat.Chat;
 import com.br.chat.core.domain.chat.ChatType;
 import com.br.chat.core.domain.message.Message;
 import com.br.chat.core.domain.message.NotificationMessage;
 import com.br.chat.core.domain.message.NotificationType;
-import com.br.chat.core.events.NotificationEventPublisher;
 import com.br.chat.core.exception.UserNotFoundException;
 import com.br.chat.core.port.in.chat.CreatePrivateChatPortIn;
 import com.br.chat.core.port.out.ChatRepositoryPortOut;
