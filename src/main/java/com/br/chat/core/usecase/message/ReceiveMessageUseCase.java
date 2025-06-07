@@ -38,21 +38,11 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
 
         if (isStartingPrivateChat) {
             startPrivateChat(chatMessage);
-            notificationEventPublisher.publishEvent(generateChatNotificationMessage(chatMessage));
+            notificationEventPublisher.publishEvent(generateChatNotifications(chatMessage));
             return;
         }
 
-        var senderId = chatMessage.getSenderUser().getId();
-        var chat = chatRepositoryPortOut.findChatById(chatMessage.getId()).orElseThrow(ChatNotFoundException::new);
-        var senderUser = chat.getUsers().stream().filter(user -> user.getId().equals(senderId)).findFirst();
-        if (senderUser.isEmpty()) return;
-
-        chatMessage.setSenderUser(senderUser.orElse(null));
-        messageRepositoryPortOut.saveChatMessage(chatMessage.getMessage(), chat);
-        var chatNotifications = generateChatNotificationMessage(chatMessage);
-        var usersNotifications = generateUsersNotificationMessage(senderUser.orElse(null), chat);
-        usersNotifications.add(chatNotifications);
-        notificationEventPublisher.publishAllEvents(usersNotifications);
+       updateChatMessages(chatMessage);
     }
 
     private void startPrivateChat(ChatMessage chatMessage) {
@@ -68,9 +58,26 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
         chatMessage.setSenderUser(senderUser);
     }
 
-    private List<NotificationMessage> generateUsersNotificationMessage(User sender, Chat chat) {
+    private void updateChatMessages(ChatMessage chatMessage){
+         var senderId = chatMessage.getSenderUser().getId();
+        var chat = chatRepositoryPortOut.findChatById(chatMessage.getId()).orElseThrow(ChatNotFoundException::new);
+        var senderUser = chat.getUsers().stream().filter(user -> user.matchesId(senderId)).findFirst().orElse(null);
+        if (Objects.isNull(senderUser)) return;
+
+        chatMessage.setSenderUser(senderUser);
+
+        messageRepositoryPortOut.saveChatMessage(chatMessage.getMessage(), chat);
+
+        var usersNotifications = generateUsesNotifications(senderUser, chat);
+        var chatNotifications = generateChatNotifications(chatMessage);
+
+        usersNotifications.add(chatNotifications);
+        notificationEventPublisher.publishAllEvents(usersNotifications);
+    }
+    
+    private List<NotificationMessage> generateUsesNotifications(User sender, Chat chat) {
         var notificationType = NotificationType.NEW_MESSAGE;
-        var chatMembers = chat.getUsers().stream().filter(user -> !user.getId().equals(sender.getId())).toList();
+        var chatMembers = chat.getUsers().stream().filter(user -> !user.matchesId(sender.getId())).toList();
         var senderUser = new User(sender.getId(), sender.getEmail(), sender.getUsername());
         var notifications = new ArrayList<NotificationMessage>();
         chatMembers.forEach(chatMember -> {
@@ -85,10 +92,11 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
 
             notifications.add(notificationMessage);
         });
+        
         return notifications;
     }
 
-    private NotificationMessage generateChatNotificationMessage(ChatMessage chatMessage) {
+    private NotificationMessage generateChatNotifications(ChatMessage chatMessage) {
         var notificationMessage = chatMessage.toNotificationMessage();
         notificationMessage.setDestination("/topics/%s".formatted(notificationMessage.getDestinationId()));
         notificationMessage.setNotificationType(NotificationType.NEW_MESSAGE);

@@ -55,7 +55,7 @@ public class ChatRepositoryAdapterOut implements ChatRepositoryPortOut {
         var usersChatEntities = chat.getUsers().stream()
                 .map(user -> {
                     var userChatEntity = new UserChatEntity(UserEntity.fromDomain(user), savedChat);
-                    userChatEntity.setOwner(user.getId().equals(chat.getOwnerId()));
+                    userChatEntity.setOwner(user.matchesId(chat.getOwnerId()));
                     return userChatEntity;
                 }).toList();
 

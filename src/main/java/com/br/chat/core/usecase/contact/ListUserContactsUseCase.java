@@ -42,7 +42,7 @@ public class ListUserContactsUseCase implements ListUserContactsPortIn {
         userContactReferences.forEach(contact -> {
             var contactUserId = contact.getUser().getId();
             var contactHasActiveChat = privateChatUserIds.contains(contactUserId);
-            var privateChat = privateChats.stream().filter(chat -> chat.getUser().getId().equals(contactUserId))
+            var privateChat = privateChats.stream().filter(chat -> chat.getUser().matchesId(contactUserId))
                     .findFirst();
             contact.setHasActiveChat(contactHasActiveChat);
             contact.setChatId(privateChat.map(PrivateChat::getId).orElse(null));
@@ -51,7 +51,7 @@ public class ListUserContactsUseCase implements ListUserContactsPortIn {
 
     private List<ContactUserReference> getUserContactReferences(UUID userId, List<Contact> contacts) {
         return contacts.stream().map(contact -> {
-            var isUserContactSender = contact.getRequesterUser().getId().equals(userId);
+            var isUserContactSender = contact.getRequesterUser().matchesId(userId);
             var user = isUserContactSender ? contact.getRequestedUser() : contact.getRequesterUser();
             return new ContactUserReference(contact.getId(), user);
         }).toList();
@@ -61,10 +61,10 @@ public class ListUserContactsUseCase implements ListUserContactsPortIn {
         return chats.stream()
                 .filter(Chat::isPrivateChat)
                 .map(chat -> {
-                    var otherUser = chat.getUsers().stream()
-                            .filter(u -> !u.getId().equals(userId))
-                            .findFirst();
-                    return new PrivateChat(chat.getId(), otherUser.orElse(null));
+                    var chatUser = chat.getUsers().stream()
+                            .filter(u -> !u.matchesId(userId))
+                            .findFirst().orElse(null);
+                    return new PrivateChat(chat.getId(), chatUser);
                 }).toList();
     }
 }

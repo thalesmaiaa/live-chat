@@ -43,4 +43,8 @@ public class User {
         this.password = passwordEncoder.encode(this.password);
     }
 
+    public Boolean matchesId(UUID id) {
+        return this.id.equals(id);
+    }
+
 }

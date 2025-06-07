@@ -21,7 +21,7 @@ public class ListUserPendingContactsUseCase implements ListUserPendingContactsPo
     public List<PendingContactResponse> execute(UUID userId) {
         var contactRequests = contactRepositoryPortOut.findAllByRequestedId(userId);
         return contactRequests.stream().filter(Contact::isPending)
-                .filter(c -> c.getRequestedUser().getId().equals(userId))
+                .filter(c -> c.getRequestedUser().matchesId(userId))
                 .map(c ->
                         new PendingContactResponse(c.getId(), User.toUserResponse(c.getRequesterUser()))).toList();
     }
