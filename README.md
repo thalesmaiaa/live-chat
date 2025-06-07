@@ -31,7 +31,7 @@ This project is structured following the **hexagonal (clean) architecture** prin
 - **Benefits**: This separation ensures high testability, flexibility to change frameworks or infrastructure, and easy
   maintenance.
 
-More details of the architecture [here](./architecture.md)
+<img src="./architecture.png">
 
 ## Technologies
 
