@@ -1,15 +1,20 @@
 # Live Chat
 
-A modern, real-time chat backend application designed to support private and group messaging, contact management, and instant notifications. Built with Spring Boot and Java 21, the project follows a clean, hexagonal architecture (Ports and Adapters), making it highly modular, maintainable, and suitable for integration into various platforms requiring live communication features.
+A modern, real-time chat backend application designed to support private and group messaging, contact management, and
+instant notifications. Built with Spring Boot and Java 21, the project follows a clean, hexagonal architecture (Ports
+and Adapters), making it highly modular, maintainable, and suitable for integration into various platforms requiring
+live communication features.
 
 ## Features
 
 - **Real-Time Messaging**: Supports sending and receiving messages in both private (one-on-one) and group chats.
 - **WebSocket Support**: Uses WebSockets for real-time message delivery and interaction between clients and the server.
-- **STOMP Broker Integration**: Utilizes STOMP as a message broker over WebSockets to efficiently route messages between chat participants.
+- **STOMP Broker Integration**: Utilizes STOMP as a message broker over WebSockets to efficiently route messages between
+  chat participants.
 - **Contact Management**: Users can send, receive, and manage contact requests, and view their contact list.
 - **Group Chat**: Create group chats and invite multiple users.
-- **Event-Driven Notifications**: Utilizes Spring’s event system to send notifications for new messages, unread messages, and contact requests.
+- **Event-Driven Notifications**: Utilizes Spring’s event system to send notifications for new messages, unread
+  messages, and contact requests.
 - **User Management**: Register, authenticate, and manage user accounts.
 - **Secure API**: OAuth2 JWT-based authentication and stateless session management.
 - **Extensible Architecture**: Decoupled notification system and clear separation of business logic layers.
@@ -21,8 +26,12 @@ This project is structured following the **hexagonal (clean) architecture** prin
 
 - **Core Domain**: Contains business logic, use cases, and domain models, isolated from infrastructure concerns.
 - **Ports (Interfaces)**: Define the operations required by the core, such as repositories and notification services.
-- **Adapters**: Implement the ports for technologies like databases, REST APIs, WebSockets, security, and event publishing.
-- **Benefits**: This separation ensures high testability, flexibility to change frameworks or infrastructure, and easy maintenance.
+- **Adapters**: Implement the ports for technologies like databases, REST APIs, WebSockets, security, and event
+  publishing.
+- **Benefits**: This separation ensures high testability, flexibility to change frameworks or infrastructure, and easy
+  maintenance.
+
+More details of the architecture [here](./architecture.md)
 
 ## Technologies
 
@@ -55,14 +64,15 @@ This project is structured following the **hexagonal (clean) architecture** prin
 
 2. **Configure the application:**
 
-   - Update `src/main/resources/application.yml` with your PostgreSQL database and security settings. Example configuration:
-     ```yaml
-     spring:
-       datasource:
-         url: jdbc:postgresql://localhost:5432/livechatdb
-         username:
-         password:
-     ```
+    - Update `src/main/resources/application.yml` with your PostgreSQL database and security settings. Example
+      configuration:
+      ```yaml
+      spring:
+        datasource:
+          url: jdbc:postgresql://localhost:5432/livechatdb
+          username:
+          password:
+      ```
 
 3. **Build the project:**
 
@@ -98,14 +108,16 @@ This project is structured following the **hexagonal (clean) architecture** prin
 
 #### Messaging
 
-- Messages are sent as part of chat creation or via chat endpoints; notifications are automatically generated and delivered via the event system.
+- Messages are sent as part of chat creation or via chat endpoints; notifications are automatically generated and
+  delivered via the event system.
 - Real-time message exchange is handled via WebSockets with STOMP as the message broker.
 
 ### WebSockets & Real-Time Messaging
 
 - The application exposes WebSocket endpoints for clients to subscribe and send messages in real time.
 - **STOMP Broker**: Acts as the message routing layer, managing subscriptions and message delivery.
-- Clients connect to WebSocket endpoints and subscribe to topics or queues for chat updates, ensuring instant message delivery and efficient communication.
+- Clients connect to WebSocket endpoints and subscribe to topics or queues for chat updates, ensuring instant message
+  delivery and efficient communication.
 
 ### Event-Driven Notifications
 
