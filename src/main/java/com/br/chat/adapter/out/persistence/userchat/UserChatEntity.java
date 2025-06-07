@@ -1,4 +1,4 @@
-package com.br.chat.adapter.out.persistence;
+package com.br.chat.adapter.out.persistence.userchat;
 
 import com.br.chat.adapter.out.persistence.chat.ChatEntity;
 import com.br.chat.adapter.out.persistence.user.UserEntity;

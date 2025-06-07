@@ -1,7 +1,7 @@
 package com.br.chat.adapter.out.persistence.user;
 
-import com.br.chat.adapter.out.persistence.UserChatEntity;
 import com.br.chat.adapter.out.persistence.message.MessageEntity;
+import com.br.chat.adapter.out.persistence.userchat.UserChatEntity;
 import com.br.chat.core.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

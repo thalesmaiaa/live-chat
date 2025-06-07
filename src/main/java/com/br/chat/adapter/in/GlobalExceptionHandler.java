@@ -1,5 +1,6 @@
-package com.br.chat.core.exception;
+package com.br.chat.adapter.in;
 
+import com.br.chat.core.exception.DomainException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;

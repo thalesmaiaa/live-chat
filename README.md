@@ -9,16 +9,12 @@ live communication features.
 
 - **Real-Time Messaging**: Supports sending and receiving messages in both private (one-on-one) and group chats.
 - **WebSocket Support**: Uses WebSockets for real-time message delivery and interaction between clients and the server.
-- **STOMP Broker Integration**: Utilizes STOMP as a message broker over WebSockets to efficiently route messages between
-  chat participants.
+- **STOMP Broker Integration**: Utilizes STOMP as a message broker over WebSockets to efficiently route messages between chat participants.
 - **Contact Management**: Users can send, receive, and manage contact requests, and view their contact list.
-- **Group Chat**: Create group chats and invite multiple users.
 - **Event-Driven Notifications**: Utilizes Spring’s event system to send notifications for new messages, unread
   messages, and contact requests.
 - **User Management**: Register, authenticate, and manage user accounts.
 - **Secure API**: OAuth2 JWT-based authentication and stateless session management.
-- **Extensible Architecture**: Decoupled notification system and clear separation of business logic layers.
-- **Modern Java 21**: Leverages the latest features and performance improvements from Java 21.
 
 ## Hexagonal Architecture (Ports & Adapters)
 
@@ -64,15 +60,15 @@ This project is structured following the **hexagonal (clean) architecture** prin
 
 2. **Configure the application:**
 
-    - Update `src/main/resources/application.yml` with your PostgreSQL database and security settings. Example
-      configuration:
-      ```yaml
-      spring:
-        datasource:
-          url: jdbc:postgresql://localhost:5432/livechatdb
-          username:
-          password:
-      ```
+   - Update `src/main/resources/application.yml` with your PostgreSQL database and security settings. Example
+     configuration:
+     ```yaml
+     spring:
+       datasource:
+         url: jdbc:postgresql://localhost:5432/livechatdb
+         username:
+         password:
+     ```
 
 3. **Build the project:**
 
@@ -90,7 +86,8 @@ This project is structured following the **hexagonal (clean) architecture** prin
 #### Authentication
 
 - Register a user: `POST /users`
-- Login: `POST /oauth/login` (returns JWT)
+- Login: `POST /oauth/login` (returns JWTs)
+- Refresh: `POST /oauth/refresh` (returns JWTs)
 
 #### Chat Endpoints
 
