@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: live-chat-cloud
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chat
+    username: postgres
+    password: Homemaranha123@
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /live-chat
+
+jwt:
+  public:
+    key: classpath:app.pub
+  private:
+    key: classpath:app.key
+
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
