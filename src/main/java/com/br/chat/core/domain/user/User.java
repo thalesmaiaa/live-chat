@@ -29,6 +29,12 @@ public class User {
         this.username = username;
     }
 
+    public User(UUID id, String email, String username) {
+        this.id = id;
+        this.email = email;
+        this.username = username;
+    }
+
     public static UserResponse toUserResponse(User user) {
         return new UserResponse(user.getId(), user.getEmail(), user.getUsername(), user.getCreatedAt(), user.getUpdatedAt());
     }

@@ -6,6 +6,7 @@ import com.br.chat.core.domain.chat.ChatType;
 import com.br.chat.core.domain.message.NotificationMessage;
 import com.br.chat.core.domain.message.NotificationType;
 import com.br.chat.core.domain.user.User;
+import com.br.chat.core.events.NotificationEventPublisher;
 import com.br.chat.core.exception.ChatNotFoundException;
 import com.br.chat.core.exception.UserNotFoundException;
 import com.br.chat.core.port.in.message.ReceiveMessagePortIn;
@@ -28,29 +29,31 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
     private final ChatRepositoryPortOut chatRepositoryPortOut;
     private final UserRepositoryPortOut userRepositoryPortOut;
     private final MessageRepositoryPortOut messageRepositoryPortOut;
+    private final NotificationEventPublisher publisher;
 
 
     @Override
     @Transactional
-    public List<NotificationMessage> execute(ChatMessage chatMessage) {
+    public void execute(ChatMessage chatMessage) {
         var isStartingPrivateChat = chatMessage.getType().equals(ChatType.PRIVATE) && Objects.isNull(chatMessage.getId());
 
         if (isStartingPrivateChat) {
             startPrivateChat(chatMessage);
-            return generateChatNotificationMessage(chatMessage);
+            publisher.publishEvent(generateChatNotificationMessage(chatMessage));
+            return;
         }
 
         var senderId = chatMessage.getSenderUser().getId();
         var chat = chatRepositoryPortOut.findChatById(chatMessage.getId()).orElseThrow(ChatNotFoundException::new);
         var senderUser = chat.getUsers().stream().filter(user -> user.getId().equals(senderId)).findFirst();
-        if (senderUser.isEmpty()) return List.of();
+        if (senderUser.isEmpty()) return;
 
         chatMessage.setSenderUser(senderUser.orElse(null));
         messageRepositoryPortOut.saveChatMessage(chatMessage.getMessage(), chat);
         var chatNotifications = generateChatNotificationMessage(chatMessage);
         var usersNotifications = generateUsersNotificationMessage(senderUser.orElse(null), chat);
-        usersNotifications.addAll(chatNotifications);
-        return usersNotifications;
+        usersNotifications.add(chatNotifications);
+        publisher.publishAllEvents(usersNotifications);
     }
 
     private void startPrivateChat(ChatMessage chatMessage) {
@@ -67,25 +70,28 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
     }
 
     private List<NotificationMessage> generateUsersNotificationMessage(User sender, Chat chat) {
+        var notificationType = NotificationType.NEW_MESSAGE;
         var chatMembers = chat.getUsers().stream().filter(user -> !user.getId().equals(sender.getId())).toList();
+        var senderUser = new User(sender.getId(), sender.getEmail(), sender.getUsername());
         var notifications = new ArrayList<NotificationMessage>();
         chatMembers.forEach(chatMember -> {
             var notificationMessage = new NotificationMessage();
             notificationMessage.setSentAt(ZonedDateTime.now());
             notificationMessage.setDestinationId(chat.getId());
-            notificationMessage.setNotificationType(NotificationType.NEW_MESSAGE);
-            notificationMessage.setDestination("/topics/notifications/%s".formatted(chatMember.getId()));
-            notificationMessage.setMessage(NotificationType.NEW_MESSAGE.getMessage().formatted(sender.getUsername(), chat.getName()));
-            notificationMessage.setSenderUser(new NotificationMessage.SenderUser(sender.getId(), sender.getEmail(), sender.getUsername()));
+            notificationMessage.setSenderUser(senderUser);
+            notificationMessage.setNotificationType(notificationType);
+            notificationMessage.setDestination(notificationType.getNotificationTopic().formatted(chatMember.getId()));
+            notificationMessage.setMessage(notificationType.getMessage().formatted(sender.getUsername(), chat.getName()));
+
             notifications.add(notificationMessage);
         });
         return notifications;
     }
 
-    private List<NotificationMessage> generateChatNotificationMessage(ChatMessage chatMessage) {
+    private NotificationMessage generateChatNotificationMessage(ChatMessage chatMessage) {
         var notificationMessage = chatMessage.toNotificationMessage();
         notificationMessage.setDestination("/topics/%s".formatted(notificationMessage.getDestinationId()));
         notificationMessage.setNotificationType(NotificationType.NEW_MESSAGE);
-        return List.of(notificationMessage);
+        return notificationMessage;
     }
 }

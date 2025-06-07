@@ -21,6 +21,4 @@ public class AuthControllerAdapterIn {
     public LoginResponse login(@RequestBody @Valid LoginRequest request) {
         return loginPortIn.execute(request);
     }
-
-
 }

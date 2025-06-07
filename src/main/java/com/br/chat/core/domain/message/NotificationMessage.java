@@ -1,5 +1,6 @@
 package com.br.chat.core.domain.message;
 
+import com.br.chat.core.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,10 +14,7 @@ public class NotificationMessage {
     private String message;
     private UUID destinationId;
     private ZonedDateTime sentAt;
-    private SenderUser senderUser;
+    private User senderUser;
     private NotificationType notificationType;
     private String destination;
-
-    public record SenderUser(UUID id, String username, String email) {
-    }
 }

@@ -5,6 +5,7 @@ import com.br.chat.adapter.in.dto.responses.UserResponse;
 import com.br.chat.core.port.in.user.CreateUserPortIn;
 import com.br.chat.core.port.in.user.DeleteUserPortIn;
 import com.br.chat.core.port.in.user.ListUserPortIn;
+import com.br.chat.core.utils.JwtUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,7 @@ public class UserControllerAdapterIn {
 
     @GetMapping("/me")
     public UserResponse findAuthenticatedUser(JwtAuthenticationToken token) {
-        var userId = String.valueOf(token.getTokenAttributes().get("sub"));
-        return listUserPortIn.execute(UUID.fromString(userId));
+        return listUserPortIn.execute(JwtUtils.extractUserIdFromToken(token));
     }
 
     @GetMapping

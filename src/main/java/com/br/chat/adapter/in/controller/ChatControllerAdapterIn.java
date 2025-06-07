@@ -8,6 +8,7 @@ import com.br.chat.core.port.in.chat.CreateGroupChatPortIn;
 import com.br.chat.core.port.in.chat.CreatePrivateChatPortIn;
 import com.br.chat.core.port.in.chat.ListChatPortIn;
 import com.br.chat.core.port.in.chat.ListUserChatPortIn;
+import com.br.chat.core.utils.JwtUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,10 @@ import java.util.UUID;
 @RequestMapping("/chats")
 public class ChatControllerAdapterIn {
 
+    private final ListChatPortIn listChatPortIn;
+    private final ListUserChatPortIn listUserChatPortIn;
     private final CreateGroupChatPortIn createGroupChatPortIn;
     private final CreatePrivateChatPortIn createPrivateChatPortIn;
-    private final ListUserChatPortIn listUserChatPortIn;
-    private final ListChatPortIn listChatPortIn;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -37,8 +38,7 @@ public class ChatControllerAdapterIn {
 
     @GetMapping
     public List<ChatResponse> findAllUserChats(JwtAuthenticationToken token) {
-        var userId = String.valueOf(token.getTokenAttributes().get("sub"));
-        return listUserChatPortIn.execute(UUID.fromString(userId));
+        return listUserChatPortIn.execute(JwtUtils.extractUserIdFromToken(token));
     }
 
     @GetMapping("/{chatId}")

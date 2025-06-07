@@ -14,12 +14,6 @@ public class NotificationUseCase implements NotificationUserPortIn {
 
     @Override
     public void execute(NotificationMessage notificationMessage) {
-        var destination = "/topics/%s".formatted(notificationMessage.getDestinationId());
-        messagingTemplate.convertAndSend(destination, notificationMessage);
-    }
-
-    @Override
-    public void execute(NotificationMessage notificationMessage, String destination) {
-        messagingTemplate.convertAndSend(destination, notificationMessage);
+        messagingTemplate.convertAndSend(notificationMessage.getDestination(), notificationMessage);
     }
 }

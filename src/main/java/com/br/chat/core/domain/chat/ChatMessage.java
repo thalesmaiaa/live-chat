@@ -44,10 +44,10 @@ public class ChatMessage {
     public NotificationMessage toNotificationMessage() {
         var notificationMessage = new NotificationMessage();
         notificationMessage.setDestinationId(this.receiverId);
-        notificationMessage.setSenderUser(new NotificationMessage.SenderUser(this.senderUser.getId(),
-                this.senderUser.getUsername(), this.senderUser.getEmail()));
         notificationMessage.setMessage(this.message.getContent());
         notificationMessage.setSentAt(this.createdAt);
+        notificationMessage.setSenderUser(new User(this.senderUser.getId(), this.senderUser.getUsername(),
+                this.senderUser.getEmail()));
         return notificationMessage;
     }
 }

@@ -6,7 +6,7 @@ import com.br.chat.adapter.in.dto.responses.ContactResponse;
 import com.br.chat.adapter.in.dto.responses.PendingContactResponse;
 import com.br.chat.core.domain.contact.ContactRequestStatus;
 import com.br.chat.core.port.in.contact.*;
-import com.br.chat.core.port.in.message.NotificationUserPortIn;
+import com.br.chat.core.utils.JwtUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,8 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
 @Validated
 @RestController
@@ -28,16 +26,11 @@ public class ContactControllerAdapterIn {
     private final ListUserContactsPortIn listUserContactsPortIn;
     private final ListUserPendingContactsPortIn listUserPendingContactsPortIn;
     private final UpdateContactRequestStatusPortIn updateContactRequestStatusPortIn;
-    private final NotificationUserPortIn notificationUserPortIn;
     private final RemoveContactPortIn removeContactPortIn;
 
     @PostMapping
     public void sendContactRequest(@RequestBody @Valid SendContactRequest request, JwtAuthenticationToken token) {
-        var userId = String.valueOf(token.getTokenAttributes().get("sub"));
-        var notificationMessage = sendContactRequestPortIn.execute(UUID.fromString(userId), request.email());
-        if (Objects.nonNull(notificationMessage)) {
-            notificationUserPortIn.execute(notificationMessage, "/topics/notifications/%s".formatted(notificationMessage.getDestinationId()));
-        }
+        sendContactRequestPortIn.execute(JwtUtils.extractUserIdFromToken(token), request.email());
     }
 
     @DeleteMapping("/{contactId}")
@@ -48,14 +41,12 @@ public class ContactControllerAdapterIn {
 
     @GetMapping
     public List<ContactResponse> findUserContacts(JwtAuthenticationToken token) {
-        var userId = String.valueOf(token.getTokenAttributes().get("sub"));
-        return listUserContactsPortIn.execute(UUID.fromString(userId));
+        return listUserContactsPortIn.execute(JwtUtils.extractUserIdFromToken(token));
     }
 
     @GetMapping("/invites")
     public List<PendingContactResponse> findPendingContactRequestS(JwtAuthenticationToken token) {
-        var userId = String.valueOf(token.getTokenAttributes().get("sub"));
-        return listUserPendingContactsPortIn.execute(UUID.fromString(userId));
+        return listUserPendingContactsPortIn.execute(JwtUtils.extractUserIdFromToken(token));
     }
 
     @PatchMapping("/{contactId}/{status}")

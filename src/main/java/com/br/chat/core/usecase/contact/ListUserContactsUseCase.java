@@ -24,15 +24,17 @@ public class ListUserContactsUseCase implements ListUserContactsPortIn {
     @Override
     public List<ContactResponse> execute(UUID userId) {
         var contacts = contactRepositoryPortOut.findAllAcceptedContactsByUserId(userId);
-        var chats = chatRepositoryPortOut.findAllByUserId(userId);
-
         if (contacts.isEmpty()) return List.of();
 
+        var chats = chatRepositoryPortOut.findAllByUserId(userId);
         var userContactReferences = getUserContactReferences(userId, contacts);
         var privateChats = extractUserPrivateChats(userId, chats);
 
         updateContactReferencesWithChatInfo(userContactReferences, privateChats);
-        return userContactReferences.stream().map(ContactUserReference::toResponse).toList();
+
+        return userContactReferences.stream()
+                .map(ContactUserReference::toResponse)
+                .toList();
     }
 
     private void updateContactReferencesWithChatInfo(List<ContactUserReference> userContactReferences, List<PrivateChat> privateChats) {
@@ -56,10 +58,13 @@ public class ListUserContactsUseCase implements ListUserContactsPortIn {
     }
 
     private List<PrivateChat> extractUserPrivateChats(UUID userId, List<Chat> chats) {
-        return chats.stream().filter(Chat::isPrivateChat)
-                .map(privateChat -> {
-                    var user = privateChat.getUsers().stream().filter(u -> !u.getId().equals(userId)).findFirst();
-                    return new PrivateChat(privateChat.getId(), user.orElse(null));
+        return chats.stream()
+                .filter(Chat::isPrivateChat)
+                .map(chat -> {
+                    var otherUser = chat.getUsers().stream()
+                            .filter(u -> !u.getId().equals(userId))
+                            .findFirst();
+                    return new PrivateChat(chat.getId(), otherUser.orElse(null));
                 }).toList();
     }
 }
