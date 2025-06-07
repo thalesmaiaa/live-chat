@@ -29,7 +29,7 @@ public class SendContactRequestUseCase implements SendContactRequestPortIn {
         var requesterUser = userRepositoryPortOut.findById(userId).orElseThrow(UserNotFoundException::new);
         var requestedUser = userRepositoryPortOut.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
-        if (userRequestedMatches(userId, requestedUser.getId())) return;
+        if (userId.equals(requestedUser.getId())) return;
 
         var existsActiveRequests = contactRepositoryPortOut.existsActiveRequestsByRequesterIdAndRequestedId(
                 requesterUser.getId(), requestedUser.getId());
@@ -40,7 +40,6 @@ public class SendContactRequestUseCase implements SendContactRequestPortIn {
             var notificationMessage = generateNotificationMessage(contactRequest);
             notificationEventPublisher.publishEvent(notificationMessage);
         }
-
     }
 
     private NotificationMessage generateNotificationMessage(Contact contact) {
@@ -49,17 +48,13 @@ public class SendContactRequestUseCase implements SendContactRequestPortIn {
         var contactSender = contact.getRequesterUser();
         var senderUser = new User(contactSender.getId(), contactSender.getUsername(), contactSender.getEmail());
 
-        notificationMessage.setMessage(notificationType.getMessage().formatted(contactSender.getUsername()));
-        notificationMessage.setDestinationId(contact.getRequestedUser().getId());
-        notificationMessage.setDestination(notificationType.getNotificationTopic().formatted(notificationMessage.getDestinationId()));
+        notificationMessage.setSenderUser(senderUser);
         notificationMessage.setSentAt(ZonedDateTime.now());
         notificationMessage.setNotificationType(notificationType);
-        notificationMessage.setSenderUser(senderUser);
+        notificationMessage.setDestinationId(contact.getRequestedUser().getId());
+        notificationMessage.setMessage(notificationType.getMessage().formatted(contactSender.getUsername()));
+        notificationMessage.setDestination(notificationType.getNotificationTopic().formatted(notificationMessage.getDestinationId()));
 
         return notificationMessage;
-    }
-
-    private boolean userRequestedMatches(UUID requesterId, UUID requestedId) {
-        return requesterId.equals(requestedId);
     }
 }

@@ -24,7 +24,7 @@ public class CreatePrivateChatUseCase implements CreatePrivateChatPortIn {
 
     private final ChatRepositoryPortOut chatRepositoryPortOut;
     private final UserRepositoryPortOut userRepositoryPortOut;
-    private final NotificationEventPublisher publisher;
+    private final NotificationEventPublisher notificationEventPublisher;
 
     @Override
     public UUID execute(CreatePrivateChatRequest request) {
@@ -48,7 +48,7 @@ public class CreatePrivateChatUseCase implements CreatePrivateChatPortIn {
         notificationMessage.setMessage(notificationType.getMessage().formatted(sender.getUsername()));
         notificationMessage.setDestination(notificationType.getNotificationTopic().formatted(receiver.getId()));
 
-        publisher.publishEvent(notificationMessage);
+        notificationEventPublisher.publishEvent(notificationMessage);
 
         return chatId;
     }

@@ -29,8 +29,7 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
     private final ChatRepositoryPortOut chatRepositoryPortOut;
     private final UserRepositoryPortOut userRepositoryPortOut;
     private final MessageRepositoryPortOut messageRepositoryPortOut;
-    private final NotificationEventPublisher publisher;
-
+    private final NotificationEventPublisher notificationEventPublisher;
 
     @Override
     @Transactional
@@ -39,7 +38,7 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
 
         if (isStartingPrivateChat) {
             startPrivateChat(chatMessage);
-            publisher.publishEvent(generateChatNotificationMessage(chatMessage));
+            notificationEventPublisher.publishEvent(generateChatNotificationMessage(chatMessage));
             return;
         }
 
@@ -53,7 +52,7 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
         var chatNotifications = generateChatNotificationMessage(chatMessage);
         var usersNotifications = generateUsersNotificationMessage(senderUser.orElse(null), chat);
         usersNotifications.add(chatNotifications);
-        publisher.publishAllEvents(usersNotifications);
+        notificationEventPublisher.publishAllEvents(usersNotifications);
     }
 
     private void startPrivateChat(ChatMessage chatMessage) {
@@ -76,9 +75,10 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
         var notifications = new ArrayList<NotificationMessage>();
         chatMembers.forEach(chatMember -> {
             var notificationMessage = new NotificationMessage();
-            notificationMessage.setSentAt(ZonedDateTime.now());
-            notificationMessage.setDestinationId(chat.getId());
+            
             notificationMessage.setSenderUser(senderUser);
+            notificationMessage.setDestinationId(chat.getId());
+            notificationMessage.setSentAt(ZonedDateTime.now());
             notificationMessage.setNotificationType(notificationType);
             notificationMessage.setDestination(notificationType.getNotificationTopic().formatted(chatMember.getId()));
             notificationMessage.setMessage(notificationType.getMessage().formatted(sender.getUsername(), chat.getName()));
