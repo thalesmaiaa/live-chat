@@ -5,8 +5,7 @@
 # Live Chat
 
 A modern, real-time chat backend application designed to support private and group messaging, contact management, and
-instant notifications. Built with Spring Boot and Java 21, the project follows a clean, hexagonal architecture (Ports
-and Adapters).
+instant notifications. Built with Spring Boot and Java 21, the project follows a clean, hexagonal architecture.
 
 ## Features
 
