@@ -1,6 +1,5 @@
 package com.br.chat.core.usecase.message;
 
-import com.br.chat.adapter.out.events.NotificationEventPublisher;
 import com.br.chat.core.domain.chat.Chat;
 import com.br.chat.core.domain.chat.ChatMessage;
 import com.br.chat.core.domain.chat.ChatType;
@@ -12,6 +11,7 @@ import com.br.chat.core.exception.UserNotFoundException;
 import com.br.chat.core.port.in.message.ReceiveMessagePortIn;
 import com.br.chat.core.port.out.ChatRepositoryPortOut;
 import com.br.chat.core.port.out.MessageRepositoryPortOut;
+import com.br.chat.core.port.out.NotificationPortOut;
 import com.br.chat.core.port.out.UserRepositoryPortOut;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
     private final ChatRepositoryPortOut chatRepositoryPortOut;
     private final UserRepositoryPortOut userRepositoryPortOut;
     private final MessageRepositoryPortOut messageRepositoryPortOut;
-    private final NotificationEventPublisher notificationEventPublisher;
+    private final NotificationPortOut notificationEventPublisher;
 
     @Override
     @Transactional
@@ -42,7 +42,7 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
             return;
         }
 
-       updateChatMessages(chatMessage);
+        updateChatMessages(chatMessage);
     }
 
     private void startPrivateChat(ChatMessage chatMessage) {
@@ -58,8 +58,8 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
         chatMessage.setSenderUser(senderUser);
     }
 
-    private void updateChatMessages(ChatMessage chatMessage){
-         var senderId = chatMessage.getSenderUser().getId();
+    private void updateChatMessages(ChatMessage chatMessage) {
+        var senderId = chatMessage.getSenderUser().getId();
         var chat = chatRepositoryPortOut.findChatById(chatMessage.getId()).orElseThrow(ChatNotFoundException::new);
         var senderUser = chat.getUsers().stream().filter(user -> user.matchesId(senderId)).findFirst().orElse(null);
         if (Objects.isNull(senderUser)) return;
@@ -74,7 +74,7 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
         usersNotifications.add(chatNotifications);
         notificationEventPublisher.publishAllEvents(usersNotifications);
     }
-    
+
     private List<NotificationMessage> generateUsesNotifications(User sender, Chat chat) {
         var notificationType = NotificationType.NEW_MESSAGE;
         var chatMembers = chat.getUsers().stream().filter(user -> !user.matchesId(sender.getId())).toList();
@@ -92,7 +92,7 @@ public class ReceiveMessageUseCase implements ReceiveMessagePortIn {
 
             notifications.add(notificationMessage);
         });
-        
+
         return notifications;
     }
 

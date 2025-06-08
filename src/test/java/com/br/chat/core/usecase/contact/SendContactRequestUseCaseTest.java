@@ -1,11 +1,10 @@
 package com.br.chat.core.usecase.contact;
 
-import com.br.chat.adapter.out.events.NotificationEventPublisher;
 import com.br.chat.core.domain.contact.Contact;
 import com.br.chat.core.domain.user.User;
 import com.br.chat.core.port.out.ContactRepositoryPortOut;
+import com.br.chat.core.port.out.NotificationPortOut;
 import com.br.chat.core.port.out.UserRepositoryPortOut;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,7 +24,7 @@ class SendContactRequestUseCaseTest {
     @Mock
     private ContactRepositoryPortOut contactRepositoryPortOut;
     @Mock
-    private NotificationEventPublisher notificationEventPublisher;
+    private NotificationPortOut notificationEventPublisher;
 
     @InjectMocks
     private SendContactRequestUseCase sendContactRequestUseCase;

@@ -1,6 +1,5 @@
 package com.br.chat.core.usecase.message;
 
-import com.br.chat.adapter.out.events.NotificationEventPublisher;
 import com.br.chat.core.domain.chat.Chat;
 import com.br.chat.core.domain.chat.ChatMessage;
 import com.br.chat.core.domain.chat.ChatType;
@@ -10,6 +9,7 @@ import com.br.chat.core.domain.message.NotificationType;
 import com.br.chat.core.domain.user.User;
 import com.br.chat.core.port.out.ChatRepositoryPortOut;
 import com.br.chat.core.port.out.MessageRepositoryPortOut;
+import com.br.chat.core.port.out.NotificationPortOut;
 import com.br.chat.core.port.out.UserRepositoryPortOut;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,7 +36,7 @@ class ReceiveMessageUseCaseTest {
     @Mock
     private MessageRepositoryPortOut messageRepositoryPortOut;
     @Mock
-    private NotificationEventPublisher notificationEventPublisher;
+    private NotificationPortOut notificationEventPublisher;
 
     @InjectMocks
     private ReceiveMessageUseCase receiveMessageUseCase;
