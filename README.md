@@ -114,6 +114,10 @@ This project is structured following the **hexagonal (clean) architecture** prin
 - `core/events/` - Event classes and listeners
 - `config/` - Security and application configuration
 
+## Simple Web Interface
+
+You can use the [`@thalesmaiaa/live-chat-webapp`](https://github.com/thalesmaiaa/live-chat-webapp) project as a simple web interface to interact with the live-chat backend and its features. This provides a ready-to-use user interface for messaging, contact management, and other chat functionalities.
+
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit a pull request with your proposed changes.
