@@ -6,27 +6,29 @@ import com.br.chat.core.domain.contact.ContactRequestStatus;
 import com.br.chat.core.port.out.ContactRepositoryPortOut;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class UpdateContactRequestUseCaseTest {
 
+    @Mock
     private ContactRepositoryPortOut contactRepositoryPortOut;
-    private UpdateContactRequestUseCase updateContactRequestUseCase;
 
-    @BeforeEach
-    void setUp() {
-        contactRepositoryPortOut = mock(ContactRepositoryPortOut.class);
-        updateContactRequestUseCase = new UpdateContactRequestUseCase(contactRepositoryPortOut);
-    }
+    @InjectMocks
+    private UpdateContactRequestUseCase updateContactRequestUseCase;
 
     @Test
     void shouldUpdateContactStatus() {
-        Contact contact = new Contact();
+        var contact = new Contact();
         when(contactRepositoryPortOut.findById(1L)).thenReturn(Optional.of(contact));
-        UpdateContactRequestStatus request = new UpdateContactRequestStatus(1L, ContactRequestStatus.ACCEPTED);
+        var request = new UpdateContactRequestStatus(1L, ContactRequestStatus.ACCEPTED);
 
         updateContactRequestUseCase.execute(request);
 

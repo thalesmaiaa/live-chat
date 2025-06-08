@@ -4,26 +4,26 @@ import com.br.chat.core.domain.contact.Contact;
 import com.br.chat.core.domain.contact.ContactRequestStatus;
 import com.br.chat.core.domain.user.User;
 import com.br.chat.core.port.out.ContactRepositoryPortOut;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class ListUserPendingContactsUseCaseTest {
 
+    @Mock
     private ContactRepositoryPortOut contactRepositoryPortOut;
-    private ListUserPendingContactsUseCase listUserPendingContactsUseCase;
 
-    @BeforeEach
-    void setUp() {
-        contactRepositoryPortOut = mock(ContactRepositoryPortOut.class);
-        listUserPendingContactsUseCase = new ListUserPendingContactsUseCase(contactRepositoryPortOut);
-    }
+    @InjectMocks
+    private ListUserPendingContactsUseCase listUserPendingContactsUseCase;
 
     @Test
     void shouldReturnPendingContacts() {

@@ -1,6 +1,5 @@
 package com.br.chat.core.usecase.contact;
 
-import com.br.chat.adapter.in.dto.responses.ContactResponse;
 import com.br.chat.core.domain.chat.Chat;
 import com.br.chat.core.domain.chat.ChatType;
 import com.br.chat.core.domain.contact.Contact;
@@ -72,7 +71,7 @@ class ListUserContactsUseCaseTest {
         when(chatRepositoryPortOut.findAllByUserId(userId))
                 .thenReturn(List.of(chat));
 
-        List<ContactResponse> result = listUserContactsUseCase.execute(userId);
+        var result = listUserContactsUseCase.execute(userId);
 
         assertThat(result).isNotNull();
         assertThat(result).isNotEmpty();
@@ -102,7 +101,7 @@ class ListUserContactsUseCaseTest {
         when(chatRepositoryPortOut.findAllByUserId(secondChatUser.getId()))
                 .thenReturn(List.of(chat));
 
-        List<ContactResponse> result = listUserContactsUseCase.execute(secondChatUser.getId());
+        var result = listUserContactsUseCase.execute(secondChatUser.getId());
 
         assertThat(result).isNotNull();
         assertThat(result).isNotEmpty();

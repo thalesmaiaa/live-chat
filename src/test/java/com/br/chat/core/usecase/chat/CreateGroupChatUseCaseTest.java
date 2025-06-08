@@ -6,6 +6,10 @@ import com.br.chat.core.port.out.ChatRepositoryPortOut;
 import com.br.chat.core.port.out.UserRepositoryPortOut;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,26 +19,24 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class CreateGroupChatUseCaseTest {
 
+    @Mock
     private ChatRepositoryPortOut chatRepositoryPortOut;
+    @Mock
     private UserRepositoryPortOut userRepositoryPortOut;
-    private CreateGroupChatUseCase createGroupChatUseCase;
 
-    @BeforeEach
-    void setUp() {
-        chatRepositoryPortOut = mock(ChatRepositoryPortOut.class);
-        userRepositoryPortOut = mock(UserRepositoryPortOut.class);
-        createGroupChatUseCase = new CreateGroupChatUseCase(chatRepositoryPortOut, userRepositoryPortOut);
-    }
+    @InjectMocks
+    private CreateGroupChatUseCase createGroupChatUseCase;
 
     @Test
     void shouldCreateGroupChat() {
-        UUID ownerId = UUID.randomUUID();
-        UUID memberId = UUID.randomUUID();
-        CreateChatGroupRequest request = new CreateChatGroupRequest(ownerId, List.of(memberId), "group");
-        User owner = new User(ownerId, "owner@email.com", "owner");
-        User member = new User(memberId, "member@email.com", "member");
+        var ownerId = UUID.randomUUID();
+        var memberId = UUID.randomUUID();
+        var request = new CreateChatGroupRequest(ownerId, List.of(memberId), "group");
+        var owner = new User(ownerId, "owner@email.com", "owner");
+        var member = new User(memberId, "member@email.com", "member");
 
         when(userRepositoryPortOut.findById(ownerId)).thenReturn(Optional.of(owner));
         when(userRepositoryPortOut.findAllById(List.of(memberId))).thenReturn(List.of(member));
@@ -45,10 +47,10 @@ class CreateGroupChatUseCaseTest {
 
     @Test
     void shouldThrowIfMissingMembers() {
-        UUID ownerId = UUID.randomUUID();
-        UUID memberId = UUID.randomUUID();
-        CreateChatGroupRequest request = new CreateChatGroupRequest(ownerId, List.of(memberId), "group");
-        User owner = new User(ownerId, "owner@email.com", "owner");
+        var ownerId = UUID.randomUUID();
+        var memberId = UUID.randomUUID();
+        var request = new CreateChatGroupRequest(ownerId, List.of(memberId), "group");
+        var owner = new User(ownerId, "owner@email.com", "owner");
 
         when(userRepositoryPortOut.findById(ownerId)).thenReturn(Optional.of(owner));
         when(userRepositoryPortOut.findAllById(List.of(memberId))).thenReturn(List.of());

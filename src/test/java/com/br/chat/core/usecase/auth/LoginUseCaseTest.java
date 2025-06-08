@@ -7,6 +7,10 @@ import com.br.chat.core.port.out.UserRepositoryPortOut;
 import com.br.chat.core.service.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
@@ -16,25 +20,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class LoginUseCaseTest {
 
+    @Mock
     private UserRepositoryPortOut userRepositoryPortOut;
+    @Mock
     private BCryptPasswordEncoder passwordEncoder;
+    @Mock
     private TokenService tokenService;
-    private LoginUseCase loginUseCase;
 
-    @BeforeEach
-    void setUp() {
-        userRepositoryPortOut = mock(UserRepositoryPortOut.class);
-        passwordEncoder = mock(BCryptPasswordEncoder.class);
-        tokenService = mock(TokenService.class);
-        loginUseCase = new LoginUseCase(userRepositoryPortOut, passwordEncoder, tokenService);
-    }
+    @InjectMocks
+    private LoginUseCase loginUseCase;
 
     @Test
     void shouldLoginSuccessfully() {
-        LoginRequest request = new LoginRequest("test@email.com", "password");
-        User user = new User(UUID.randomUUID(), "test@email.com", "username");
+        var request = new LoginRequest("test@email.com", "password");
+        var user = new User(UUID.randomUUID(), "test@email.com", "username");
         user.setPassword("hashed");
         when(userRepositoryPortOut.findByEmail(request.email())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(request.password(), user.getPassword())).thenReturn(true);
@@ -48,7 +50,7 @@ class LoginUseCaseTest {
 
     @Test
     void shouldThrowWhenUserNotFound() {
-        LoginRequest request = new LoginRequest("notfound@email.com", "password");
+        var request = new LoginRequest("notfound@email.com", "password");
         when(userRepositoryPortOut.findByEmail(request.email())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> loginUseCase.execute(request))
@@ -57,8 +59,8 @@ class LoginUseCaseTest {
 
     @Test
     void shouldThrowWhenPasswordInvalid() {
-        LoginRequest request = new LoginRequest("test@email.com", "password");
-        User user = new User(UUID.randomUUID(), "test@email.com", "username");
+        var request = new LoginRequest("test@email.com", "password");
+        var user = new User(UUID.randomUUID(), "test@email.com", "username");
         user.setPassword("hashed");
         when(userRepositoryPortOut.findByEmail(request.email())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(request.password(), user.getPassword())).thenReturn(false);

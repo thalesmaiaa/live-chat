@@ -1,27 +1,28 @@
 package com.br.chat.core.usecase.user;
 
 import com.br.chat.core.port.out.UserRepositoryPortOut;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
+@ExtendWith(MockitoExtension.class)
 class DeleteUserUseCaseTest {
 
+    @Mock
     private UserRepositoryPortOut userRepositoryPortOut;
-    private DeleteUserUseCase deleteUserUseCase;
 
-    @BeforeEach
-    void setUp() {
-        userRepositoryPortOut = mock(UserRepositoryPortOut.class);
-        deleteUserUseCase = new DeleteUserUseCase(userRepositoryPortOut);
-    }
+    @InjectMocks
+    private DeleteUserUseCase deleteUserUseCase;
 
     @Test
     void shouldDeleteUserById() {
-        UUID userId = UUID.randomUUID();
+        var userId = UUID.randomUUID();
         deleteUserUseCase.execute(userId);
         verify(userRepositoryPortOut).deleteById(userId);
     }

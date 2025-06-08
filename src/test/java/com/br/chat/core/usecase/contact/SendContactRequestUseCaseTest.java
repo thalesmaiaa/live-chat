@@ -7,31 +7,33 @@ import com.br.chat.core.port.out.ContactRepositoryPortOut;
 import com.br.chat.core.port.out.UserRepositoryPortOut;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class SendContactRequestUseCaseTest {
 
+    @Mock
     private UserRepositoryPortOut userRepositoryPortOut;
+    @Mock
     private ContactRepositoryPortOut contactRepositoryPortOut;
+    @Mock
     private NotificationEventPublisher notificationEventPublisher;
-    private SendContactRequestUseCase sendContactRequestUseCase;
 
-    @BeforeEach
-    void setUp() {
-        userRepositoryPortOut = mock(UserRepositoryPortOut.class);
-        contactRepositoryPortOut = mock(ContactRepositoryPortOut.class);
-        notificationEventPublisher = mock(NotificationEventPublisher.class);
-        sendContactRequestUseCase = new SendContactRequestUseCase(userRepositoryPortOut, contactRepositoryPortOut, notificationEventPublisher);
-    }
+    @InjectMocks
+    private SendContactRequestUseCase sendContactRequestUseCase;
 
     @Test
     void shouldNotSendRequestToSelf() {
-        UUID userId = UUID.randomUUID();
-        User user = new User(userId, "email", "username");
+        var userId = UUID.randomUUID();
+        var user = new User(userId, "email", "username");
         when(userRepositoryPortOut.findById(userId)).thenReturn(Optional.of(user));
         when(userRepositoryPortOut.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
@@ -41,10 +43,10 @@ class SendContactRequestUseCaseTest {
 
     @Test
     void shouldSendContactRequestIfNotExists() {
-        UUID userId = UUID.randomUUID();
-        UUID requestedId = UUID.randomUUID();
-        User requester = new User(userId, "email", "username");
-        User requested = new User(requestedId, "other@email.com", "other");
+        var userId = UUID.randomUUID();
+        var requestedId = UUID.randomUUID();
+        var requester = new User(userId, "email", "username");
+        var requested = new User(requestedId, "other@email.com", "other");
         when(userRepositoryPortOut.findById(userId)).thenReturn(Optional.of(requester));
         when(userRepositoryPortOut.findByEmail(requested.getEmail())).thenReturn(Optional.of(requested));
         when(contactRepositoryPortOut.existsActiveRequestsByRequesterIdAndRequestedId(userId, requestedId)).thenReturn(false);
