@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ContactControllerAdapterInTest {
 
+    private static final UUID userId = UUID.randomUUID();
     @Mock
     private SendContactRequestPortIn sendContactRequestPortIn;
     @Mock
@@ -32,20 +34,17 @@ class ContactControllerAdapterInTest {
     private UpdateContactRequestStatusPortIn updateContactRequestStatusPortIn;
     @Mock
     private RemoveContactPortIn removeContactPortIn;
-
     @InjectMocks
     private ContactControllerAdapterIn controller;
 
     @Test
     void shouldSendContactRequestCallPort() {
         var token = mock(JwtAuthenticationToken.class);
-        var userId = UUID.randomUUID();
         var request = new SendContactRequest("test@email.com");
-        try (MockedStatic<JwtUtils> jwtUtils = Mockito.mockStatic(JwtUtils.class)) {
-            jwtUtils.when(() -> JwtUtils.extractUserIdFromToken(token)).thenReturn(userId);
-            controller.sendContactRequest(request, token);
-            verify(sendContactRequestPortIn).execute(userId, request.email());
-        }
+        
+        when(token.getTokenAttributes()).thenReturn(Map.of("sub", userId));
+        controller.sendContactRequest(request, token);
+        verify(sendContactRequestPortIn).execute(userId, request.email());
     }
 
     @Test
@@ -58,27 +57,25 @@ class ContactControllerAdapterInTest {
     @Test
     void shouldFindUserContactsReturnContacts() {
         var token = mock(JwtAuthenticationToken.class);
-        var userId = UUID.randomUUID();
         var contacts = List.of(mock(ContactResponse.class));
+        when(token.getTokenAttributes()).thenReturn(Map.of("sub", userId));
         when(listUserContactsPortIn.execute(userId)).thenReturn(contacts);
-        try (MockedStatic<JwtUtils> jwtUtils = Mockito.mockStatic(JwtUtils.class)) {
-            jwtUtils.when(() -> JwtUtils.extractUserIdFromToken(token)).thenReturn(userId);
-            var result = controller.findUserContacts(token);
-            assertThat(result).isEqualTo(contacts);
-        }
+
+        var result = controller.findUserContacts(token);
+
+        assertThat(result).isEqualTo(contacts);
     }
 
     @Test
     void shouldFindPendingContactRequestsReturnPendingContacts() {
         var token = mock(JwtAuthenticationToken.class);
-        var userId = UUID.randomUUID();
         var pending = List.of(mock(PendingContactResponse.class));
+        when(token.getTokenAttributes()).thenReturn(Map.of("sub", userId));
         when(listUserPendingContactsPortIn.execute(userId)).thenReturn(pending);
-        try (MockedStatic<JwtUtils> jwtUtils = Mockito.mockStatic(JwtUtils.class)) {
-            jwtUtils.when(() -> JwtUtils.extractUserIdFromToken(token)).thenReturn(userId);
-            var result = controller.findPendingContactRequestS(token);
-            assertThat(result).isEqualTo(pending);
-        }
+
+        var result = controller.findPendingContactRequestS(token);
+
+        assertThat(result).isEqualTo(pending);
     }
 
     @Test

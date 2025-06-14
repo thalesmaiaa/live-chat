@@ -22,16 +22,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ListUserContactsUseCaseTest {
 
+    private final UUID userId = UUID.randomUUID();
     @Mock
     private ContactRepositoryPortOut contactRepositoryPortOut;
-
     @Mock
     private ChatRepositoryPortOut chatRepositoryPortOut;
-
     @InjectMocks
     private ListUserContactsUseCase listUserContactsUseCase;
-
-    private UUID userId;
 
     @Test
     void shouldListUserEmptyContacts() {
