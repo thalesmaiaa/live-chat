@@ -4,7 +4,6 @@ import com.br.chat.adapter.in.dto.requests.CreateChatGroupRequest;
 import com.br.chat.core.domain.user.User;
 import com.br.chat.core.port.out.ChatRepositoryPortOut;
 import com.br.chat.core.port.out.UserRepositoryPortOut;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,6 +55,6 @@ class CreateGroupChatUseCaseTest {
         when(userRepositoryPortOut.findAllById(List.of(memberId))).thenReturn(List.of());
 
         assertThatThrownBy(() -> createGroupChatUseCase.execute(request))
-            .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(RuntimeException.class);
     }
 }

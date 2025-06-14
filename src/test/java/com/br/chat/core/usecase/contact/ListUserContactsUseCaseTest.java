@@ -6,7 +6,6 @@ import com.br.chat.core.domain.contact.Contact;
 import com.br.chat.core.domain.user.User;
 import com.br.chat.core.port.out.ChatRepositoryPortOut;
 import com.br.chat.core.port.out.ContactRepositoryPortOut;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,11 +32,6 @@ class ListUserContactsUseCaseTest {
     private ListUserContactsUseCase listUserContactsUseCase;
 
     private UUID userId;
-
-    @BeforeEach
-    void setUp() {
-        userId = UUID.randomUUID();
-    }
 
     @Test
     void shouldListUserEmptyContacts() {
