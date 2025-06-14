@@ -1,6 +1,8 @@
 package com.br.chat.adapter.in;
 
 import com.br.chat.core.exception.DomainException;
+import com.br.chat.core.exception.InvalidParam;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -31,8 +33,5 @@ public class GlobalExceptionHandler {
         pb.setProperty("invalid-params", fieldErrors);
 
         return pb;
-    }
-
-    private record InvalidParam(String name, String reason) {
     }
 }
