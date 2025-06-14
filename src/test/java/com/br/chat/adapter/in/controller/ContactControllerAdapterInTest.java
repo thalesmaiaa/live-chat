@@ -6,7 +6,6 @@ import com.br.chat.adapter.in.dto.responses.ContactResponse;
 import com.br.chat.adapter.in.dto.responses.PendingContactResponse;
 import com.br.chat.core.domain.contact.ContactRequestStatus;
 import com.br.chat.core.port.in.contact.*;
-import com.br.chat.core.utils.JwtUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
