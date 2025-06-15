@@ -67,13 +67,24 @@ This project is structured following the **hexagonal (clean) architecture** prin
     docker compose up -d
    ```
 
-3. **Generate your private and public keys inside src/main/resources**
+3. **Configure the application.yml file:**
+
+   ```yaml
+   spring:
+     datasource:
+       url: jdbc:postgresql://localhost:5432/livechatdb
+       username:
+       password:
+   ```
+
+4. **Generate your private and public keys inside src/main/resources**
+
    ```
     openssl genrsa > app.key
     openssl rsa -in app.key -pubout -out app.pub
    ```
 
-4. **Run the application:**
+5. **Run the application:**
 
    ```bash
    mvn clean install

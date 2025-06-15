@@ -3,9 +3,9 @@ spring:
     name: live-chat-cloud
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/chat
-    username: postgres
-    password: Homemaranha123@
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
