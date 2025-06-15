@@ -50,7 +50,7 @@ This project is structured following the **hexagonal (clean) architecture** prin
 - Java 21
 - Maven
 - PostgreSQL database
-- (Optional) Docker for containerized deployment
+- Docker for containerized deployment
 
 ### Setup
 
@@ -61,14 +61,10 @@ This project is structured following the **hexagonal (clean) architecture** prin
    cd live-chat
    ```
 
-2. **Configure the application.yml file:**
+2. **Run Docker Containers**
 
-   ```yaml
-   spring:
-     datasource:
-       url: jdbc:postgresql://localhost:5432/livechatdb
-       username:
-       password:
+   ```bash
+    docker compose up -d
    ```
 
 3. **Generate your private and public keys inside src/main/resources**
@@ -80,6 +76,7 @@ This project is structured following the **hexagonal (clean) architecture** prin
 4. **Run the application:**
 
    ```bash
+   mvn clean install
    mvn spring-boot:run
    ```
 
